@@ -1,5 +1,6 @@
 package com.example.gcodepanel;
 
+import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -10,7 +11,6 @@ import android.widget.ImageButton;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private int pos;
     private PropilFragment propilFragment;
     private FragmentTransaction transaction;
 
@@ -32,6 +32,31 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         transaction.commit();
     }
 
+    private int cnt = 0;
+
+    private void chngKamen() {
+        Fragment fragment;
+        if (cnt == 0) {
+            fragment = new SettsFragment();
+        } else {
+            fragment = new SettsFragment2();
+        }
+        if (cnt < 2) {
+            transaction = getFragmentManager().beginTransaction();
+            transaction.replace(R.id.propil_container, fragment);
+            transaction.addToBackStack("");
+            transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+            transaction.commit();
+            cnt++;
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        cnt--;
+    }
+
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
@@ -42,7 +67,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 propilFragment.getPropil().clearContent();
                 break;
             case R.id.sendBtn:
-
+                chngKamen();
                 break;
         }
     }
