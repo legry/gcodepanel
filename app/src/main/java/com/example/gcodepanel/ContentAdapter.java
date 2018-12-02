@@ -43,22 +43,18 @@ public class ContentAdapter extends RecyclerView.Adapter<MyHolder> implements Sa
             dataPropils = new ArrayList<>();
         }
     }
-//dataPropils.isEmpty() ? new DataPropil() : dataPropils.get(dataPropils.size() - 1)
+
     void addContent() {
         DataPropil dataPropil = new DataPropil();
-        if (!dataPropils.isEmpty()) {
-            dataPropil.setSize(dataPropils.get(getItemCount() - 1).getSize());
-            dataPropil.setNums(dataPropils.get(getItemCount() - 1).getNums());
-            dataPropil.setLength_propil(dataPropils.get(getItemCount() - 1).getLength_propil());
-        }
         dataPropils.add(dataPropil);
         this.notifyItemInserted(getItemCount() - 1);
         saveData();
     }
 
     void clearContent() {
+        int sz = dataPropils.size();
         dataPropils.clear();
-        this.notifyDataSetChanged();
+        this.notifyItemRangeRemoved(0, sz);
         saveData();
     }
 
@@ -66,7 +62,6 @@ public class ContentAdapter extends RecyclerView.Adapter<MyHolder> implements Sa
         String jsnStr = new Gson().toJson(dataPropils);
         editor.putString("jsonlist", jsnStr);
         editor.apply();
-        Log.i("dataPropils", jsnStr);
     }
 
     @NonNull
@@ -84,9 +79,6 @@ public class ContentAdapter extends RecyclerView.Adapter<MyHolder> implements Sa
         TextView nums = holder.nums;
         nums.setText(String.valueOf(dataPropils.get(position).getNums()));
         nums.setOnClickListener(new FieldChanger(context, dataPropils,this,this, position));
-        TextView lengthPropila = holder.lengthPropila;
-        lengthPropila.setText(String.valueOf(dataPropils.get(position).getLength_propil()));
-        lengthPropila.setOnClickListener(new FieldChanger(context, dataPropils,this,this, position));
         ImageButton del = holder.del;
         del.setOnClickListener(new FieldChanger(context, dataPropils, this, this, position));
     }

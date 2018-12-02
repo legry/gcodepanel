@@ -7,14 +7,13 @@ import android.widget.TextView;
 
 class MyHolder extends RecyclerView.ViewHolder {
 
-    TextView size, nums, lengthPropila;
+    TextView size, nums;
     ImageButton del;
 
     MyHolder(View itemView) {
         super(itemView);
         size = itemView.findViewById(R.id.size);
         nums = itemView.findViewById(R.id.nums);
-        lengthPropila = itemView.findViewById(R.id.length);
         del = itemView.findViewById(R.id.del);
     }
 }

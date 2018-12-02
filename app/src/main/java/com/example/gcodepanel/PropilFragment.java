@@ -1,13 +1,12 @@
 package com.example.gcodepanel;
 
+import android.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,11 +27,10 @@ public class PropilFragment extends Fragment {
         RecyclerView recyclerView = (RecyclerView) inflater.inflate(
                 R.layout.recycler, container, false);
         Bundle args = getArguments();
-        propil = new ContentAdapter(Objects.requireNonNull(getContext()), Objects.requireNonNull(args).getString("mymode"));
+        propil = new ContentAdapter(Objects.requireNonNull(getContext()), "mytasks");
         recyclerView.setAdapter(propil);
         recyclerView.setHasFixedSize(true);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
-        // Set padding for Tiles (not needed for Cards/Lists!)
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         return recyclerView;
     }

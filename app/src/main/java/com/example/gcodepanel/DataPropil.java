@@ -2,7 +2,7 @@ package com.example.gcodepanel;
 
 public class DataPropil {
 
-    private int size, nums, length_propil;
+    private int size, nums;
 
     public int getSize() {
         return size;
@@ -20,11 +20,4 @@ public class DataPropil {
         this.nums = nums;
     }
 
-    int getLength_propil() {
-        return length_propil;
-    }
-
-    void setLength_propil(int length_propil) {
-        this.length_propil = length_propil;
-    }
 }

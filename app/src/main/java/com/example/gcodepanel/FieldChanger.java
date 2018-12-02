@@ -64,10 +64,6 @@ public class FieldChanger extends FlChr implements TextView.OnClickListener {
                 alert.setTitle("Колличество");
                 edittext.setText(String.valueOf(dataPropils.get(getCurr_pos()).getNums()));
                 break;
-            case R.id.length:
-                alert.setTitle("Длина пропила");
-                edittext.setText(String.valueOf(dataPropils.get(getCurr_pos()).getLength_propil()));
-                break;
         }
 
         alert.setView(edittext);
@@ -83,9 +79,6 @@ public class FieldChanger extends FlChr implements TextView.OnClickListener {
                             break;
                         case R.id.nums:
                             dataPropils.get(getCurr_pos()).setNums(value);
-                            break;
-                        case R.id.length:
-                            dataPropils.get(getCurr_pos()).setLength_propil(value);
                             break;
                     }
                     adapter.notifyItemChanged(getCurr_pos());
