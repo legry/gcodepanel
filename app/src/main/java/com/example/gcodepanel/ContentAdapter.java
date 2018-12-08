@@ -2,66 +2,54 @@ package com.example.gcodepanel;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-
-import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.List;
-
 public class ContentAdapter extends RecyclerView.Adapter<MyHolder> implements SavedListener {
 
-    private SharedPreferences.Editor editor;
-    private List<DataPropil> dataPropils;
     private Context context;
+    private int clr;
+    private MyApp myApp;
+    private String myMode;
 
     @SuppressLint("CommitPrefEdits")
     ContentAdapter(Context context, String myMode) {
         this.context = context;
-        SharedPreferences preferences = context.getSharedPreferences(myMode, Context.MODE_PRIVATE);
-        editor = preferences.edit();
-        if (preferences.contains("jsonlist")) {
-            String jsonlist = preferences.getString("jsonlist", "");
-            if (!jsonlist.equals("")) {
-                Gson gson = new Gson();
-                Type type = new TypeToken<List<DataPropil>>(){}.getType();
-                dataPropils = gson.fromJson(jsonlist, type);
-            } else {
-                dataPropils = new ArrayList<>();
-            }
-        } else {
-            dataPropils = new ArrayList<>();
+        this.myMode = myMode;
+        switch (myMode) {
+            case "popirechn":
+                clr = Color.BLUE;
+                break;
+            case "prodoln":
+                clr = Color.RED;
+                break;
         }
+        myApp = (MyApp) context.getApplicationContext();
+        myApp.dataPropil(myMode);
     }
 
     void addContent() {
         DataPropil dataPropil = new DataPropil();
-        dataPropils.add(dataPropil);
+        myApp.dataPropil(myMode).add(dataPropil);
         this.notifyItemInserted(getItemCount() - 1);
         saveData();
     }
 
     void clearContent() {
-        int sz = dataPropils.size();
-        dataPropils.clear();
+        int sz = myApp.dataPropil(myMode).size();
+        myApp.dataPropil(myMode).clear();
         this.notifyItemRangeRemoved(0, sz);
         saveData();
     }
 
     private void saveData() {
-        String jsnStr = new Gson().toJson(dataPropils);
-        editor.putString("jsonlist", jsnStr);
-        editor.apply();
+        myApp.saveChngDataPropils();
     }
 
     @NonNull
@@ -73,19 +61,21 @@ public class ContentAdapter extends RecyclerView.Adapter<MyHolder> implements Sa
 
     @Override
     public void onBindViewHolder(@NonNull MyHolder holder, int position) {
+        holder.txtsize.setTextColor(clr);
+        holder.txtnums.setTextColor(clr);
         TextView size = holder.size;
-        size.setText(String.valueOf(dataPropils.get(position).getSize()));
-        size.setOnClickListener(new FieldChanger(context, dataPropils,this, this, position));
+        size.setText(String.valueOf(myApp.dataPropil(myMode).get(position).getSize()));
+        size.setOnClickListener(new FieldChanger(context, myApp.dataPropil(myMode),this, this, position));
         TextView nums = holder.nums;
-        nums.setText(String.valueOf(dataPropils.get(position).getNums()));
-        nums.setOnClickListener(new FieldChanger(context, dataPropils,this,this, position));
+        nums.setText(String.valueOf(myApp.dataPropil(myMode).get(position).getNums()));
+        nums.setOnClickListener(new FieldChanger(context, myApp.dataPropil(myMode),this,this, position));
         ImageButton del = holder.del;
-        del.setOnClickListener(new FieldChanger(context, dataPropils, this, this, position));
+        del.setOnClickListener(new FieldChanger(context, myApp.dataPropil(myMode), this, this, position));
     }
 
     @Override
     public int getItemCount() {
-        return dataPropils.size();
+        return myApp.dataPropil(myMode).size();
     }
 
     @Override

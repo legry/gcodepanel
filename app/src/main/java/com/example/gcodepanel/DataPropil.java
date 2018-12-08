@@ -19,5 +19,4 @@ public class DataPropil {
     public void setNums(int nums) {
         this.nums = nums;
     }
-
 }

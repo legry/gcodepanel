@@ -4,12 +4,8 @@
     <string name="nums">Кол-во</string>
     <string name="length">Длина</string>
     <string name="_0">0</string>
-    <string name="grad_rez">Выбор направления резания</string>
-    <string name="_poper">Поперечный</string>
-    <string name="_prodol">Продольный</string>
-    <string name="chng_kamen">Выбор камня</string>
-    <string name="_granit">Гранит</string>
-    <string name="_dolomit">Доломит</string>
-    <string name="_dzag">Толщина заготовки</string>
-    <string name="_lzag">Длина реза</string>
+    <string name="ip_address">ipaddress</string>
+    <string name="step_z">stepZ</string>
+    <string name="d_disca">D_disca</string>
+    <string name="_f">F</string>
 </resources>

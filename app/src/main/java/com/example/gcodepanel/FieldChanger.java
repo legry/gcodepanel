@@ -32,8 +32,8 @@ public class FieldChanger extends FlChr implements TextView.OnClickListener {
     public void onClick(View view) {
         if (view.getId() == R.id.del) {
             dataPropils.remove(getCurr_pos());
-            adapter.notifyItemRemoved(getCurr_pos());
             setRem_pos(getCurr_pos());
+            adapter.notifyItemRemoved(getCurr_pos());
             savedListener.onSave();
         } else {
             dialogCreator(view);
