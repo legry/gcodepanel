@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    >
+    <PreferenceScreen
+        android:title="Настройка сети"
+        android:summary="Подключение к компьютеру"
+        >
+        <EditTextPreference
+            android:key="@string/ip_address"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:summary="Например: 192.168.43.226:8081"
+            android:title="Адрес компьютера"
+            />
+    </PreferenceScreen>
+
+    <PreferenceScreen android:title="Настройка станка">
+        <EditTextPreference
+            android:key="@string/step_z"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:summary="Для гранита"
+            android:title="Шаг по оси Z"
+            />
+        <EditTextPreference
+            android:key="@string/d_disca"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:title="Толщина диска"
+            />
+        <EditTextPreference
+            android:key="@string/_f"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:summary="При опускании"
+            android:title="Скорость F"
+            />
+        <Preference
+            android:title="Таблица для доломита"
+            android:summary="Скорость пиления от толщины заготовки">
+            <intent
+                android:targetPackage="com.example.gcodepanel"
+                android:targetClass="com.example.gcodepanel.ActivityTableSetts"/>
+        </Preference>
+    </PreferenceScreen>
+</PreferenceScreen>
