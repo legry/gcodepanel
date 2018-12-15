@@ -1,75 +1,73 @@
 package com.example.gcodepanel;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
+import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import com.example.gcodepanel.GCode.GCodeComander;
 
 import java.util.Objects;
+
+import static com.example.gcodepanel.GCode.GCodeComander.mykamens;
+import static com.example.gcodepanel.GCode.GCodeComander.mymodes;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     private ViewPagerAdapter adapter;
     private int pos;
-    private TabLayout tabLayout;
     private int[] myicons = {R.drawable.poper, R.drawable.prodol};
-    private MyApp myApp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        myApp = (MyApp) getApplicationContext();
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         ViewPager viewPager = findViewById(R.id.viewpager);
         setupViewPager(viewPager);
 
-        tabLayout = findViewById(R.id.tablayout);
+        BottomNavigationView kamenchng = findViewById(R.id.kamenchng);
+        kamenchng.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.dolomit:
+                        MyApp.myFields.kamen = mykamens[0];
+                        break;
+                    case R.id.granit:
+                        MyApp.myFields.kamen = mykamens[1];
+                        break;
+                }
+                return true;
+            }
+        });
+        TabLayout tabLayout = findViewById(R.id.tablayout);
         tabLayout.setupWithViewPager(viewPager);
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
-                Log.i("tablayout", "tabSelected");
                 pos = tab.getPosition();
+                MyApp.myFields.propil = mymodes[pos];
+                adapter.updt_zag(pos);
             }
 
             @Override
             public void onTabUnselected(TabLayout.Tab tab) {
-                Log.i("tablayout", "tabUnselected");
+
             }
 
             @Override
             public void onTabReselected(TabLayout.Tab tab) {
-                Log.i("tablayout", "tabReselected");
-            }
-        });
-        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-                //Log.i("viewpager", "pageScrolled");
-            }
 
-            @Override
-            public void onPageSelected(int position) {
-                //Log.i("viewpager", "pageSelected");
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-                //Log.i("viewpager", "pageScrollStateChanged");
             }
         });
 
@@ -84,12 +82,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         settsbtn.setOnClickListener(this);
         FloatingActionButton sendBtn = findViewById(R.id.addBtn);
         sendBtn.setOnClickListener(this);
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        Log.i("activity", "destroy");
     }
 
     private void setupViewPager(ViewPager viewPager) {
@@ -113,8 +105,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 startActivity(intent);
                 break;
             case R.id.sendBtn:
-                Gson gson = new Gson();
-                Log.i("myApp", gson.toJson(myApp.myFields));
+
+                GCodeComander comander = new GCodeComander(MyApp.myFields);
                 break;
         }
     }

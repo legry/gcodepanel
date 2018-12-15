@@ -2,10 +2,11 @@
     <string name="app_name">GCodePanel</string>
     <string name="size">Размер</string>
     <string name="nums">Кол-во</string>
-    <string name="length">Длина</string>
     <string name="_0">0</string>
     <string name="ip_address">ipaddress</string>
     <string name="step_z">stepZ</string>
     <string name="d_disca">D_disca</string>
     <string name="_f">F</string>
+    <string name="lzag">Длина пропила</string>
+    <string name="dzag">Толщина заготовки</string>
 </resources>

@@ -5,8 +5,11 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
+import com.example.gcodepanel.GCode.DataPropil;
+import com.example.gcodepanel.GCode.Datas;
+import com.example.gcodepanel.GCode.GCodeComander;
+import com.example.gcodepanel.GCode.MyFields;
 import com.google.gson.Gson;
-import com.google.gson.annotations.Expose;
 import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
@@ -15,25 +18,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.example.gcodepanel.ViewPagerAdapter.mymodes;
-
 public class MyApp extends Application {
-    MyFields myFields;
+    public static MyFields myFields;
     private SharedPreferences.Editor editorDatas;
     private SharedPreferences.Editor editorDataPropils;
     private SharedPreferences.OnSharedPreferenceChangeListener listener;
     private SharedPreferences prefs;
-
-    class MyFields {
-        String kamen;
-        String propil;
-        String host;
-        String stepZ;
-        String D_disca;
-        String _f;
-        Map<String, List<DataPropil>> dataPropils;
-        List<Datas> datas;
-    }
 
     @Override
     public void onTerminate() {
@@ -50,18 +40,18 @@ public class MyApp extends Application {
             public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String s) {
                 switch (s) {
                     case "ipaddress": myFields.host = sharedPreferences.getString(s, ""); break;
-                    case "stepZ": myFields.stepZ = sharedPreferences.getString(s, ""); break;
-                    case "D_disca": myFields.D_disca = sharedPreferences.getString(s, ""); break;
-                    case "F": myFields._f = sharedPreferences.getString(s, ""); break;
+                    case "stepZ": myFields.stepZ = Integer.parseInt(sharedPreferences.getString(s, "0")); break;
+                    case "D_disca": myFields.D_disca = Integer.parseInt(sharedPreferences.getString(s, "0")); break;
+                    case "F": myFields.F = Integer.parseInt(sharedPreferences.getString(s, "0")); break;
                 }
             }
         };
 
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
         myFields.host = prefs.getString("ipaddress", "");
-        myFields.stepZ = prefs.getString("stepZ", "");
-        myFields.D_disca = prefs.getString("D_disca", "");
-        myFields._f = prefs.getString("F", "");
+        myFields.stepZ = Integer.parseInt(prefs.getString("stepZ", "0"));
+        myFields.D_disca = Integer.parseInt(prefs.getString("D_disca", "0"));
+        myFields.F = Integer.parseInt(prefs.getString("F", "0"));
         regListner();
         createDatas();
         createDataPropils();
@@ -86,13 +76,13 @@ public class MyApp extends Application {
                 myFields.dataPropils = gson.fromJson(jsonlist, type);
             } else {
                 myFields.dataPropils = new HashMap<>();
-                myFields.dataPropils.put(mymodes[0], new ArrayList<DataPropil>());
-                myFields.dataPropils.put(mymodes[1], new ArrayList<DataPropil>());
+                myFields.dataPropils.put(GCodeComander.mymodes[0], new ArrayList<DataPropil>());
+                myFields.dataPropils.put(GCodeComander.mymodes[1], new ArrayList<DataPropil>());
             }
         } else {
             myFields.dataPropils = new HashMap<>();
-            myFields.dataPropils.put(mymodes[0], new ArrayList<DataPropil>());
-            myFields.dataPropils.put(mymodes[1], new ArrayList<DataPropil>());
+            myFields.dataPropils.put(GCodeComander.mymodes[0], new ArrayList<DataPropil>());
+            myFields.dataPropils.put(GCodeComander.mymodes[1], new ArrayList<DataPropil>());
         }
     }
 

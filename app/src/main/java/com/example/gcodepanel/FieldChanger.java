@@ -9,6 +9,8 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.example.gcodepanel.GCode.DataPropil;
+
 import java.util.List;
 
 public class FieldChanger extends FlChr implements TextView.OnClickListener {

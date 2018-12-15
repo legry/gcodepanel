@@ -1,4 +1,4 @@
-package com.example.gcodepanel;
+package com.example.gcodepanel.GCode;
 
 public class DataPropil {
 

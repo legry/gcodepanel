@@ -1,13 +1,13 @@
-package com.example.gcodepanel;
+package com.example.gcodepanel.GCode;
 
-class Datas {
+public class Datas {
     private int d, f;
 
-    Datas(int d) {
+    public Datas(int d) {
         this.d = d;
     }
 
-    int getD() {
+    public int getD() {
         return d;
     }
 

@@ -11,6 +11,8 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.example.gcodepanel.GCode.DataPropil;
+
 public class ContentAdapter extends RecyclerView.Adapter<MyHolder> implements SavedListener {
 
     private Context context;

@@ -1,19 +1,18 @@
 package com.example.gcodepanel;
 
 import android.os.Bundle;
-import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
+
+import static com.example.gcodepanel.GCode.GCodeComander.mymodes;
 
 public class ViewPagerAdapter extends FragmentStatePagerAdapter {
     private final List<Fragment> mFragmentList = new ArrayList<>();
     private final List<String> mFragmentTitleList = new ArrayList<>();
-    public static String[] mymodes = {"popirechn", "prodoln"};
 
     ViewPagerAdapter(FragmentManager fm) {
         super(fm);
@@ -25,6 +24,10 @@ public class ViewPagerAdapter extends FragmentStatePagerAdapter {
         args.putString("mymode", mymodes[position]);
         mFragmentList.get(position).setArguments(args);
         return mFragmentList.get(position);
+    }
+
+    void updt_zag(int pos) {
+        ((PropilFragment) mFragmentList.get(pos)).updt_zag();
     }
 
     @Override
