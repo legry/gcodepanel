@@ -7,7 +7,7 @@ import android.preference.PreferenceManager;
 
 import com.example.gcodepanel.GCode.DataPropil;
 import com.example.gcodepanel.GCode.Datas;
-import com.example.gcodepanel.GCode.GCodeComander;
+import com.example.gcodepanel.GCode.GCodeBuilder;
 import com.example.gcodepanel.GCode.MyFields;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -76,13 +76,13 @@ public class MyApp extends Application {
                 myFields.dataPropils = gson.fromJson(jsonlist, type);
             } else {
                 myFields.dataPropils = new HashMap<>();
-                myFields.dataPropils.put(GCodeComander.mymodes[0], new ArrayList<DataPropil>());
-                myFields.dataPropils.put(GCodeComander.mymodes[1], new ArrayList<DataPropil>());
+                myFields.dataPropils.put(GCodeBuilder.mymodes[0], new ArrayList<DataPropil>());
+                myFields.dataPropils.put(GCodeBuilder.mymodes[1], new ArrayList<DataPropil>());
             }
         } else {
             myFields.dataPropils = new HashMap<>();
-            myFields.dataPropils.put(GCodeComander.mymodes[0], new ArrayList<DataPropil>());
-            myFields.dataPropils.put(GCodeComander.mymodes[1], new ArrayList<DataPropil>());
+            myFields.dataPropils.put(GCodeBuilder.mymodes[0], new ArrayList<DataPropil>());
+            myFields.dataPropils.put(GCodeBuilder.mymodes[1], new ArrayList<DataPropil>());
         }
     }
 

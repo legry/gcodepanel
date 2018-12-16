@@ -1,21 +1,24 @@
 package com.example.gcodepanel.GCode;
 
-import android.util.Log;
+import android.content.Context;
+import android.os.Environment;
 
 import org.apache.commons.math3.analysis.UnivariateFunction;
 import org.apache.commons.math3.analysis.interpolation.SplineInterpolator;
 import org.apache.commons.math3.analysis.interpolation.UnivariateInterpolator;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.HashMap;
 
-public class GCodeComander {
+public class GCodeBuilder {
 
     public static final String[] mykamens = {"dolomit", "granit"};
     public static final String[] mymodes = {"popirechn", "prodoln"};
     private String[] coords;
     private MyFields myFields;
+    private Context context;
 
     private long F_dzag() {
         UnivariateInterpolator interpolator = new SplineInterpolator();
@@ -29,22 +32,51 @@ public class GCodeComander {
         return Math.round(function.value(myFields.dzag));
     }
 
-    public GCodeComander(MyFields myFields) {
+    public GCodeBuilder(Context context, MyFields myFields) {
+        this.context = context;
         this.myFields = myFields;
         HashMap<String, String[]> coordMap = new HashMap<>();
         coordMap.put(mymodes[0], new String[]{"Y", "X", "-", "90", ""});
         coordMap.put(mymodes[1], new String[]{"X", "Y", "", "0", ""});
         coords = coordMap.get(myFields.propil);
-        try {
-            Method method = this.getClass().getMethod(myFields.kamen + "_propil", int.class);
-            String result = (String) method.invoke(this, 300);
-            Log.i("gcode", result);
-        } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
-            e.printStackTrace();
-        }
     }
 
-    public String Head() {
+    public void createFullGCode() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                int size = 0;
+
+                try {
+                    StringBuilder sb = new StringBuilder();
+                    sb.append(Head());
+                    for (DataPropil propil : myFields.dataPropils.get(myFields.propil)) {
+                        for (int i = 0; i < propil.getNums(); i++) {
+                            size += propil.getSize();
+                            sb.append(creatPropil(size));
+                        }
+                    }
+                    File myDir = Environment.getExternalStorageDirectory().getAbsoluteFile();
+                    myDir = new File(myDir + "/MyGCodeDirectory");
+                    if (!myDir.exists()) myDir.mkdirs();
+                    File myfile = new File(myDir, "mygcodefile.txt");
+                    if (!myfile.exists()) {
+                        myfile.createNewFile();
+                    } else {
+                        FileWriter bw = new FileWriter(myfile);
+                        bw.write(sb.toString());
+                        bw.flush();
+                        bw.close();
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        }).start();
+    }
+
+    private String Head() {
         return "G0 G53 Z0\n" +
                 "G90 G0 C" +
                 coords[3] +
@@ -53,7 +85,14 @@ public class GCodeComander {
                 "M07\n";
     }
 
-    public String dolomit_propil(int size) {
+    private String creatPropil(int size) {
+        String res = null;
+        if (myFields.kamen.equals(mykamens[0])) res = dolomit_propil(size);
+        else if (myFields.kamen.equals(mykamens[1])) res = granit_propil(size);
+        return res;
+    }
+
+    private String dolomit_propil(int size) {
         return
                 move_axis_on_with_F("Z", 0, myFields.F) + "\n" +
                         move_axis_on_with_F(coords[0] + coords[2], myFields.lzag, F_dzag()) + "\n" +
@@ -63,7 +102,7 @@ public class GCodeComander {
 
     private int cnt = 0;
 
-    public String granit_propil(int size) {
+    private String granit_propil(int size) {
         StringBuilder gs = new StringBuilder();
         float numpropil = (float) myFields.dzag/myFields.stepZ;
         int dzag_with_step = myFields.dzag;
@@ -84,7 +123,7 @@ public class GCodeComander {
     }
 
     private String one_granit_propil(int cn1, int coord) {
-        String sign = ((cn1 % 2 == 0) ? coords[2] : coords[4]);
+        String sign = cn1 % 2 == 0 ? coords[2] : coords[4];
         int propcoord = ((cn1 % 2 == 0)) ? myFields.lzag : 0;
         return move_axis_on_with_F("Z", coord, myFields.F) + "\n" +
                 move_axis_on_with_F(coords[0] + sign, propcoord, 10000) + "\n";

@@ -1,11 +1,15 @@
 package com.example.gcodepanel;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -13,18 +17,21 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
 
-import com.example.gcodepanel.GCode.GCodeComander;
+import com.example.gcodepanel.GCode.GCodeBuilder;
 
 import java.util.Objects;
 
-import static com.example.gcodepanel.GCode.GCodeComander.mykamens;
-import static com.example.gcodepanel.GCode.GCodeComander.mymodes;
+import static com.example.gcodepanel.GCode.GCodeBuilder.mykamens;
+import static com.example.gcodepanel.GCode.GCodeBuilder.mymodes;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
+    private static final int REQUEST_CODE_PERMISSION_READ_CONTACTS = 1234;
     private ViewPagerAdapter adapter;
     private int pos;
     private int[] myicons = {R.drawable.poper, R.drawable.prodol};
+    private String[] my_perms = new String[] {Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,6 +98,32 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         viewPager.setAdapter(adapter);
     }
 
+    private void checkedPerms() {
+        checkedPerms(my_perms[0]);
+    }
+
+    private void checkedPerms(String perm) {
+        int permissionStatus = ContextCompat.checkSelfPermission(this, perm);
+        if (permissionStatus == PackageManager.PERMISSION_GRANTED) {
+            if (perm.equals(my_perms[0])) checkedPerms(my_perms[1]);
+            else new GCodeBuilder(MainActivity.this, MyApp.myFields).createFullGCode();
+        } else {
+            ActivityCompat.requestPermissions(this, new String[]{perm}, REQUEST_CODE_PERMISSION_READ_CONTACTS);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case REQUEST_CODE_PERMISSION_READ_CONTACTS:
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    if (permissions[0].equals(my_perms[0])) checkedPerms(my_perms[1]);
+                    else new GCodeBuilder(MainActivity.this, MyApp.myFields).createFullGCode();
+                }
+        }
+    }
+
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
@@ -105,8 +138,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 startActivity(intent);
                 break;
             case R.id.sendBtn:
-
-                GCodeComander comander = new GCodeComander(MyApp.myFields);
+                checkedPerms();
                 break;
         }
     }

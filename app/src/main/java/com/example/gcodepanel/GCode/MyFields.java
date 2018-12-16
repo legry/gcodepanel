@@ -4,8 +4,8 @@ import java.util.List;
 import java.util.Map;
 
 public class MyFields {
-    public String kamen = GCodeComander.mykamens[0];
-    public String propil = GCodeComander.mymodes[0];
+    public String kamen = GCodeBuilder.mykamens[0];
+    public String propil = GCodeBuilder.mymodes[0];
     public int lzag = 0;
     public int dzag = 0;
     public String host;
